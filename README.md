@@ -1,8 +1,6 @@
 # xqs_kolczatki
 
 # Autorski skrypt na obiekty policyjne pod item
-
-
 # Po postawieniu obiektu, można go usunąć, gracz dostanie wtedy dany item do ekwipunku.
 
 
@@ -13,5 +11,4 @@ config.lua ->
  false - wyłącza mozliwośc postawienia danego przedmiotu
  
  
-Skrypt napisany w 30 minut,
-Pozdrawiam
+Skrypt napisany w 30 minut
