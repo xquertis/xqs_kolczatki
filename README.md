@@ -1,7 +1,7 @@
 # xqs_kolczatki
 
 ## Skrypt na obiekty policyjne pod item
-## Po postawieniu obiektu, można go usunąć, gracz dostanie wtedy dany item do ekwipunku.
+### Po postawieniu obiektu, można go usunąć, gracz dostanie wtedy dany item do ekwipunku.
 
 
 config.lua ->
