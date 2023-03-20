@@ -9,6 +9,4 @@ config.lua ->
  true - włącza mozliwośc postawienia danego przedmiotu,
  
  false - wyłącza mozliwośc postawienia danego przedmiotu
- 
- 
-Skrypt napisany w 30 minut
+
