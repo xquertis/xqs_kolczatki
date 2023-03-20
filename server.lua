@@ -54,6 +54,7 @@ AddEventHandler('xqs_kolczatki:dodaj', function(item)
 	xPlayer.addInventoryItem('kolczatka', 1)
     elseif item == 'pacholek' then
     xPlayer.addInventoryItem('pacholek', 1)
+	print('x11')
     elseif item == 'barierka' then
     xPlayer.addInventoryItem('barierka', 1)
     else
