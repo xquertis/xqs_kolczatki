@@ -25,80 +25,36 @@ AddEventHandler('esx:setJob', function(job)
 	Citizen.Wait(5000)
 end)
 
-RegisterNetEvent('xqskolczatka')
-AddEventHandler('xqskolczatka', function()
-	if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
-	local model     = 'p_ld_stinger_s'
-	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
-
-		ESX.Game.SpawnObject(model, {
-			x = x,
-			y = y,
-			z = z
-		}, function(obj)
-			SetEntityHeading(obj, GetEntityHeading(playerPed))
-			PlaceObjectOnGroundProperly(obj)
-		end)
-	else
-		ESX.ShowNotification('Nie jesteś zatrudniony w policji')
-	end
+RegisterNetEvent('xqsplace')
+AddEventHandler('xqsplace', function(object)
+	if PlayerData.job ~= nil and PlayerData.job.name != 'police' then
+			ESX.ShowNotification('Nie jesteś zatrudniony w policji')
+		else
+			local model     = object
+			local playerPed = PlayerPedId()
+			local coords    = GetEntityCoords(playerPed)
+			local forward   = GetEntityForwardVector(playerPed)
+			local x, y, z   = table.unpack(coords + forward * 1.0)
+		
+				ESX.Game.SpawnObject(model, {
+					x = x,
+					y = y,
+					z = z
+				}, function(obj)
+					SetEntityHeading(obj, GetEntityHeading(playerPed))
+					PlaceObjectOnGroundProperly(obj)
+				end)
+		end
 end)
 
-RegisterNetEvent('xqspacholek')
-AddEventHandler('xqspacholek', function()
-	if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
-	local model     = 'prop_roadcone02a'
+RegisterNetEvent('nearprop')
+AddEventHandler('nearprop', function(entity)
 	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
-
-		ESX.Game.SpawnObject(model, {
-			x = x,
-			y = y,
-			z = z - 2.0
-		}, function(obj)
-			SetEntityHeading(obj, GetEntityHeading(playerPed))
-			PlaceObjectOnGroundProperly(obj)
-		end)
-	else
-		ESX.ShowNotification('Nie jesteś zatrudniony w policji')
-	end
-end)
-
-RegisterNetEvent('xqsbarierka')
-AddEventHandler('xqsbarierka', function()
-	if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
-	local model     = 'prop_barrier_work05'
-	local playerPed = PlayerPedId()
-	local coords    = GetEntityCoords(playerPed)
-	local forward   = GetEntityForwardVector(playerPed)
-	local x, y, z   = table.unpack(coords + forward * 1.0)
-
-		ESX.Game.SpawnObject(model, {
-			x = x,
-			y = y,
-			z = z
-		}, function(obj)
-			SetEntityHeading(obj, GetEntityHeading(playerPed))
-			PlaceObjectOnGroundProperly(obj)
-		end)
-	else
-		ESX.ShowNotification('Nie jesteś zatrudniony w policji')
-	end
-end)
-
-RegisterNetEvent('xqs_kolczatki:obokprop')
-AddEventHandler('xqs_kolczatki:obokpropa', function(entity)
-	local playerPed = PlayerPedId()
-	local wiad = 'Naciśnij ~INPUT_CONTEXT~ aby usunąć ten obiekt'
+	local wiad      = 'Naciśnij ~INPUT_CONTEXT~ aby usunąć ten obiekt'
 	
 
 	if PlayerData.job ~= nil and PlayerData.job.name == 'police' and IsPedOnFoot(playerPed) then
-		CurrentAction     = 'usunpropa'
+		CurrentAction     = 'deleteprop'
 		CurrentActionMsg  = wiad
 		CurrentActionData = {entity = entity}
 	end
@@ -117,9 +73,9 @@ AddEventHandler('xqs_kolczatki:obokpropa', function(entity)
 	end
 end)
 
-RegisterNetEvent('xqs_kolczatki:nieobokpropa')
-AddEventHandler('xqs_kolczatki:nieobokpropa', function(entity)
-	if CurrentAction == 'usunpropa' then
+RegisterNetEvent('notnearprop')
+AddEventHandler('notnearprop', function(entity)
+	if CurrentAction == 'deleteprop' then
 		CurrentAction = nil
 	end
 end)
@@ -156,12 +112,12 @@ Citizen.CreateThread(function()
 
 		if closestDistance ~= -1 and closestDistance <= 3.0 then
 			if LastEntity ~= closestEntity then
-				TriggerEvent('xqs_kolczatki:obokpropa', closestEntity)
+				TriggerEvent('nearprop', closestEntity)
 				LastEntity = closestEntity
 			end
 		else
 			if LastEntity ~= nil then
-				TriggerEvent('xqs_kolczatki:nieobokpropa', LastEntity)
+				TriggerEvent('notnearprop', LastEntity)
 				LastEntity = nil
 			end
 		end
@@ -174,7 +130,7 @@ Citizen.CreateThread(function()
 		if CurrentAction ~= nil then
 			ESX.ShowHelpNotification(CurrentActionMsg)
 			if IsControlJustReleased(0, 38) and PlayerData.job ~= nil and PlayerData.job.name == 'police' then
-			if CurrentAction == 'usunpropa' then
+			if CurrentAction == 'deleteprop' then
 				if GetEntityModel(CurrentActionData.entity) == GetHashKey('p_ld_stinger_s') then
 					TriggerServerEvent('xqs_kolczatki:dodaj', 'kolczatka')
 				elseif GetEntityModel(CurrentActionData.entity) == GetHashKey('prop_roadcone02a') then

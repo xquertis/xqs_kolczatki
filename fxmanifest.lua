@@ -1,4 +1,4 @@
-fx_version 'bodacious'
+fx_version 'celurean'
 game 'gta5'
 author 'xquertis#8888'
 
@@ -7,7 +7,4 @@ server_scripts {
 	'server.lua'
 }
 
-client_scripts {
-	'config.lua',
-	'client.lua'
-}
+client_script 'client.lua'
